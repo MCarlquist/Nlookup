@@ -1,0 +1,36 @@
+{
+  "name": "node-phone-check",
+  "version": "1.0.0",
+  "description": "Check phone through CLI",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:Tenkaklet/node-check-phone.git"
+  },
+  "keywords": [
+    "sms",
+    "network"
+  ],
+  "author": "Max Carlquist",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Tenkaklet/node-check-phone/issues"
+  },
+  "homepage": "https://github.com/Tenkaklet/node-check-phone#readme",
+  "dependencies": {
+    "axios": "^1.6.7",
+    "chalk": "^5.3.0",
+    "cli-table3": "^0.6.3",
+    "commander": "^12.0.0",
+    "dotenv": "^16.4.5",
+    "inquirer": "^9.2.15",
+    "node-fetch": "^3.3.2",
+    "ora": "^8.0.1"
+  },
+  "type": "module"
+}
