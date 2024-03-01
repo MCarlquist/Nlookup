@@ -10,7 +10,7 @@ import { checkIpAddress } from './commands/ip/index.mjs';
 dotenv.config();
 
 // check if process.env.API_KEY is present
-if (!process.env.API_KEY) {
+if (!process.env.API_KEY && !process.env.IP_KEY) {
   console.log(chalk.red('API_KEY not found. Please add it to your .env file.'));
   process.exit(1);
 }

@@ -15,7 +15,7 @@ export async function checkIpAddress() {
             prefixText: chalk.blue('Connecting to the ip database: '),
         }).start();
         if (response.succeed) {
-            const data = response;
+            const data = await response.ipData;
             spinner.succeed('Ip address confirmed and details obtained!');
             displayResults(data);
         } else {
@@ -38,125 +38,55 @@ async function promptForIPAddress() {
 }
 
 async function fetchDataFromIPDatabase(ipAddress) {
-
-    const testData = {
-            "ip_address": "166.171.248.255",
-            "city": "San Jose",
-            "city_geoname_id": 5392171,
-            "region": "California",
-            "region_iso_code": "CA",
-            "region_geoname_id": 5332921,
-            "postal_code": "95141",
-            "country": "United States",
-            "country_code": "US",
-            "country_geoname_id": 6252001,
-            "country_is_eu": false,
-            "continent": "North America",
-            "continent_code": "NA",
-            "continent_geoname_id": 6255149,
-            "longitude": -121.7714,
-            "latitude": 37.1835,
-            "security": {
-                "is_vpn": false
-            },
-            "timezone": {
-                "name": "America/Los_Angeles",
-                "abbreviation": "PDT",
-                "gmt_offset": -7,
-                "current_time": "06:37:41",
-                "is_dst": true
-            },
-            "flag": {
-                "emoji": "🇺🇸",
-                "unicode": "U+1F1FA U+1F1F8",
-                "png": "https://static.abstractapi.com/country-flags/US_flag.png",
-                "svg": "https://static.abstractapi.com/country-flags/US_flag.svg"
-            },
-            "currency": {
-                "currency_name": "USD",
-                "currency_code": "USD"
-            },
-            "connection": {
-                "autonomous_system_number": 20057,
-                "autonomous_system_organization": "ATT-MOBILITY-LLC-AS20057",
-                "connection_type": "Cellular",
-                "isp_name": "AT&T Mobility LLC",
-                "organization_name": "Service Provider Corporation"
-            }
-        };
-    const ohYeah = true;
-    if (ohYeah) {
+    
+    // fetch data from the API
+    const response = await fetch(`https://ipgeolocation.abstractapi.com/v1/?api_key=${process.env.IP_KEY}&ip_address=${ipAddress}`);
+    if (response.statusText === 'OK') {
         return {
-            ipData: testData,
+            ipData: await response.json(),
             succeed: true,
         };
     } else {
         return {
-            message: 'Error getting ip address details'
+            message: response.statusText
         };
     }
-    // // fetch data from the API
-    // const response = await fetch(testData);
-
-    // if (response.statusText === 'OK') {
-    //     return {
-    //         ipData: await response.json(),
-    //         succeed: true,
-    //     };
-    // } else {
-    //     return {
-    //         message: response.statusText
-    //     };
-    // }
 }
 
-
-export function displayResults(data) {
+function displayResults(data) {
     // Display the results in a table
-    const { ipData } = [data][0];
-    
+    const ipData = [data][0];
+
     const table = new Table({
         head: ['IP Address', 'Flag', 'Country', 'Location', 'Use VPN', 'Latitude', 'Longitude'],
-        colWidths: [20, 5, 15, 20, 10, 10, 10],
+        colWidths: [20, 10, 15, 20, 10, 15, 15],
         wordWrap: true,
     });
 
     // Iterates through the phoneData array and pushes each phone number object's
     // data into a new row in the table variable to display the results.
-    const combined = [...Object.keys(ipData),...Object.values(ipData)];
     const ipValues = Object.values(ipData);
-    console.log('ipData', ipValues);
-    console.log('combined', combined);
-    // loops through combined array
 
-    combined.forEach(item => {
-       console.log('items', item);
-       let ip_address = undefined;
-       let country = undefined;
-       if (item === 'ip_address') {
-         ip_address = ipValues[0];
-    }
+    // Optimized to directly access the needed values instead of looping
+    let ip_address = ipValues[0];
+    let flag = ipValues[18].emoji;
+    let country = ipValues[7];
+    let city = ipValues[1];
+    let use_vpn = ipValues[16].is_vpn;
+    let latitude = ipValues[14];
+    let longitude = ipValues[15];
 
-    if (item === 'country') {
-        country = ipValues[7];
-    }
-
-    console.log('ip_address', ip_address);
-       table.push([
+    table.push([
         ip_address,
-        null,
+        flag,
         country,
-            // item.ip_address,
-            //     item.flag.emoji || item.flag.unicode,
-            //     item.country,
-            //     `${item.city}, ${item.region_iso_code}`,
-            //     item.security.is_vpn ? chalk.green('Yes') : chalk.red('No'),
-            //     item.latitude,
-            //     item.longitude
-        ]);
-    });
+        city,
+        use_vpn ? chalk.green('Yes') : chalk.red('No'),
+        latitude,
+        longitude
+    ]);
 
-
+    
     // Prints the phone number data table to the console.
     // This allows the user to see the results of the phone number lookup.
     console.log(table.toString());
