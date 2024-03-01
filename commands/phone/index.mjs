@@ -2,7 +2,8 @@ import inquirer from 'inquirer';
 import chalk from 'chalk';
 import fetch from 'node-fetch';
 import ora from 'ora';
-import Table from 'cli-table3';
+import { handleFetchError } from '../../helpers/handleError.mjs';
+import { displayResults } from '../../helpers/display.js';
 
 /**
  * Checks a phone number by prompting the user for input, fetching data from a phone number database API, and displaying the results.
@@ -69,41 +70,4 @@ async function fetchDataFromPhoneDatabase(telephone) {
     } else {
         return response.statusText;
     }
-}
-
-/**
- * Displays the phone number lookup results in a table.
- * 
- * @param {Object} data The phone number data returned from the API.
-*/
-function displayResults(data) {
-    // Display the results in a table
-    const phoneData = [data];
-
-    const table = new Table({
-        head: ['Phone Number', 'Country Prefix', 'Location', 'Carrier', 'Type', 'Valid'],
-        colWidths: [20, 10, 20, 20, 20, 10],
-        wordWrap: true,
-    });
-
-    // Iterates through the phoneData array and pushes each phone number object's
-    // data into a new row in the table variable to display the results.
-    phoneData.forEach(item => {
-        table.push([
-            item.format.local,
-            item.country.prefix,
-            item.country.name,
-            item.carrier || 'N/A',
-            item.type,
-            item.valid ? chalk.green('Yes') : chalk.red('No'),
-        ]);
-    });
-
-    // Prints the phone number data table to the console.
-    // This allows the user to see the results of the phone number lookup.
-    console.log(table.toString());
-};
-
-function handleFetchError(error) {
-    console.error(chalk.bgRed('Error fetching data:', error.message));
 }

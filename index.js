@@ -4,6 +4,7 @@ import { program } from 'commander';
 import dotenv from 'dotenv';
 import chalk from 'chalk';
 import { checkPhoneNumber } from './commands/phone/index.mjs';
+import { checkIpAddress } from './commands/ip/index.mjs';
 
 // Initialize dotenv
 dotenv.config();
@@ -19,5 +20,10 @@ program
   .command('phone')
   .description('Get the information of a phone number')
   .action(checkPhoneNumber);
+// TODO: this command isn't fully implemntented yet
+program
+  .command('ip')
+  .description('Get the information of a host')
+  .action(checkIpAddress);
 
 program.parse(process.argv);
