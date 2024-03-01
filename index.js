@@ -20,7 +20,7 @@ program
   .command('phone')
   .description('Get the information of a phone number')
   .action(checkPhoneNumber);
-// TODO: this command isn't fully implemntented yet
+
 program
   .command('ip')
   .description('Get the information of a host')
