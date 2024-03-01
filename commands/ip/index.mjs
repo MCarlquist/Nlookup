@@ -113,8 +113,8 @@ async function fetchDataFromIPDatabase(ipAddress) {
 
 export function displayResults(data) {
     // Display the results in a table
-    const ipData = [data][0];
-
+    const { ipData } = [data][0];
+    
     const table = new Table({
         head: ['IP Address', 'Flag', 'Country', 'Location', 'Use VPN', 'Latitude', 'Longitude'],
         colWidths: [20, 5, 15, 20, 10, 10, 10],
@@ -123,17 +123,38 @@ export function displayResults(data) {
 
     // Iterates through the phoneData array and pushes each phone number object's
     // data into a new row in the table variable to display the results.
-    for (const ip in ipData) {
-        table.push([
-            ipData[ip].ip_address,
-            ipData[ip].flag.emoji || ipData[ip].flag.unicode,
-            ipData[ip].country,
-            `${ipData[ip].city}, ${ipData[ip].region_iso_code}`,
-            ipData[ip].security.is_vpn ? chalk.green('Yes') : chalk.red('No'),
-            ipData[ip].latitude,
-            ipData[ip].longitude
-        ]);
+    const combined = [...Object.keys(ipData),...Object.values(ipData)];
+    const ipValues = Object.values(ipData);
+    console.log('ipData', ipValues);
+    console.log('combined', combined);
+    // loops through combined array
+
+    combined.forEach(item => {
+       console.log('items', item);
+       let ip_address = undefined;
+       let country = undefined;
+       if (item === 'ip_address') {
+         ip_address = ipValues[0];
     }
+
+    if (item === 'country') {
+        country = ipValues[7];
+    }
+
+    console.log('ip_address', ip_address);
+       table.push([
+        ip_address,
+        null,
+        country,
+            // item.ip_address,
+            //     item.flag.emoji || item.flag.unicode,
+            //     item.country,
+            //     `${item.city}, ${item.region_iso_code}`,
+            //     item.security.is_vpn ? chalk.green('Yes') : chalk.red('No'),
+            //     item.latitude,
+            //     item.longitude
+        ]);
+    });
 
 
     // Prints the phone number data table to the console.
