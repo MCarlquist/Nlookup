@@ -15,10 +15,22 @@ export function displayResults(data) {
     });
     const headerValues = Object.values(header);
     
+    let table = undefined; 
+
     console.log('headerKeys: ', headerKeys);
-    const table = new Table({
+    // if headerKeys array includes [ 'Message' ] or ['Valid'] then new table of only showing one row
+    const isValid = headerKeys.includes('Valid');
+    if(headerKeys.includes('Message') || isValid.valueOf() === false) {
+        table = new Table({
+            head: ['Message'],
+            colWidths: [50],
+        });    
+    } 
+    
+    table = new Table({
         head: headerKeys,
         colWidths: [20, 10, 20, 20, 20, 10],
+        colAligns: 'center',
         wordWrap: true,
     });
 
@@ -30,11 +42,21 @@ export function displayResults(data) {
         const values = Object.values(item);
         const tableRow = [];
         keys.forEach((key, index) => {
+            // if the phone is a valid phone number
             if (key === 'valid') {
                 tableRow.push(values[index] ? chalk.green('Yes') : chalk.red('No'));
+            // Ip Address security
             } else if(key === 'security') {
-                const security = values[index].is_vpn ? chalk.green('Yes') : chalk.red('No');
+                const security = values[index].is_vpn ? chalk.green('Is VPN') : chalk.red('Not VPN');
                 tableRow.push(security);
+            // Ip Address security
+            } else if (key === 'timezone') {
+                const currentTime = values[index].current_time;
+                tableRow.push(currentTime);
+            // Ip Address security
+            } else if (key === 'flag') {
+                const flag = values[index].emoji;
+                tableRow.push(flag);
             } else {
                 tableRow.push(values[index]);
             }
