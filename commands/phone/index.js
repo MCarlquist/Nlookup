@@ -14,16 +14,18 @@ export async function checkPhoneNumber() {
     const { telephone } = await promptForPhoneNumber();
     try {
         const response = await fetchDataFromPhoneDatabase(telephone);
+
         const spinner = ora({
             text: 'Checking Number...',
             spinner: 'hamburger',
             prefixText: chalk.blue('Connecting to the phone database: '),
         }).start();
-
         if (response.succeed === 'Phone found') {
             const data = await response.phoneData;
             spinner.succeed('Phone number details obtained!');
             displayResults(data);
+        } else {
+            spinner.fail('Error getting phone number details');
         }
 
     } catch (error) {
@@ -59,6 +61,7 @@ async function fetchDataFromPhoneDatabase(telephone) {
     
     // fetch data from the API
     const response = await fetch(`https://phonevalidation.abstractapi.com/v1/?api_key=${process.env.PHONE_KEY}&phone=${telephone}`);
+    
     if (response.statusText === 'OK') {
         return {
             phoneData: await response.json(),
