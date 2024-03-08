@@ -20,7 +20,7 @@ export async function checkPhoneNumber() {
             spinner: 'hamburger',
             prefixText: chalk.blue('Connecting to the phone database: '),
         }).start();
-        if (response.succeed === 'Phone found') {
+        if (response.succeed) {
             const data = await response.phoneData;
             spinner.succeed('Phone number details obtained!');
             displayResults(data);
@@ -61,11 +61,11 @@ async function fetchDataFromPhoneDatabase(telephone) {
     
     // fetch data from the API
     const response = await fetch(`https://phonevalidation.abstractapi.com/v1/?api_key=${process.env.PHONE_KEY}&phone=${telephone}`);
-    
+    const { phone, valid, format, country, location, type, carrier } = await response.json();
     if (response.statusText === 'OK') {
         return {
-            phoneData: await response.json(),
-            succeed: 'Phone found',
+            phone, valid, format, country, location, type, carrier,
+            succeed: true,
         };
     } else {
         return response.statusText;

@@ -15,13 +15,13 @@ export async function checkIpAddress() {
             spinner: 'hamburger',
             prefixText: chalk.blue('Connecting to the ip database: '),
         }).start();
-        console.log('res', response);
-        if (response.succeed) {
-            const data = await response.ipData;
+        
+        if (response) {
+            const data = response;
             spinner.succeed('Ip address confirmed and details obtained!');
             displayResults(data);
         } else {
-            spinner.fail(response.message);
+            spinner.fail(response);
         }
 
     } catch (error) {
@@ -47,7 +47,6 @@ async function fetchDataFromIPDatabase(ipAddress) {
         const { city, country, latitude, longitude, ip_address, region, security, postal_code, country_code, timezone, flag } = await response.json();
         return {
             city, country, latitude, longitude, ip_address, region, security, postal_code, country_code, timezone, flag,
-            succeed: true,
         };
     } else {
         return {
@@ -93,4 +92,4 @@ async function fetchDataFromIPDatabase(ipAddress) {
 //     // Prints the phone number data table to the console.
 //     // This allows the user to see the results of the phone number lookup.
 //     console.log(table.toString());
-// };
+// }; 
