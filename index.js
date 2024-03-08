@@ -6,7 +6,7 @@ import chalk from 'chalk';
 import { checkPhoneNumber } from './commands/phone/index.mjs';
 import { checkIpAddress } from './commands/ip/index.mjs';
 
-// Initialize dotenv
+// Initialise dotenv
 dotenv.config();
 
 // check if process.env.API_KEY is present
