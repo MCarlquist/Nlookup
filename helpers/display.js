@@ -6,6 +6,7 @@ import chalk from 'chalk';
  * @param {Object} data
 */
 export function displayResults(data) {
+    
     // Display the results in a table
     const info = [data]; // info is an array of objects from phone and IP data
     const header = info[0];
@@ -13,18 +14,19 @@ export function displayResults(data) {
         // Remove underscores, capitalise, and separate words in the keys
         return key.replace(/_([a-z])/g, function (match) { return ' ' + match[1].toUpperCase(); }).replace(/^[a-z]/, function (match) { return match.toUpperCase(); });
     });
-    const headerValues = Object.values(header);
     
-    let table = undefined; 
-
-    console.log('headerKeys: ', headerKeys);
-    // if headerKeys array includes [ 'Message' ] or ['Valid'] then new table of only showing one row
-    const isValid = headerKeys.includes('Valid');
-    if(headerKeys.includes('Message') || isValid.valueOf() === false) {
+    let table = undefined;
+    const isValid = !info[0].valid;
+    if(headerKeys.includes('Message') || isValid) {
         table = new Table({
-            head: ['Message'],
-            colWidths: [50],
-        });    
+            head: ['Unfortunately'],
+            colWidths: [40],
+        });
+        const errorMessage = 'The provided information is invalid';
+        table.push([errorMessage]);
+        // show the error table
+        console.log(table.toString());
+        return;
     } 
     
     table = new Table({
