@@ -10,11 +10,11 @@ export function displayResults(data) {
     const info = [data]; // info is an array of objects from phone and IP data
     const header = info[0];
     const headerKeys = Object.keys(header).map(key => {
-        // Remove underscores, capitalize, and separate words in the keys
+        // Remove underscores, capitalise, and separate words in the keys
         return key.replace(/_([a-z])/g, function (match) { return ' ' + match[1].toUpperCase(); }).replace(/^[a-z]/, function (match) { return match.toUpperCase(); });
     });
     const headerValues = Object.values(header);
-    // console.log('headerValues: ', headerValues);
+    
     console.log('headerKeys: ', headerKeys);
     const table = new Table({
         head: headerKeys,

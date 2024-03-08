@@ -15,6 +15,7 @@ export async function checkIpAddress() {
             spinner: 'hamburger',
             prefixText: chalk.blue('Connecting to the ip database: '),
         }).start();
+        console.log('res', response);
         if (response.succeed) {
             const data = await response.ipData;
             spinner.succeed('Ip address confirmed and details obtained!');
@@ -43,8 +44,9 @@ async function fetchDataFromIPDatabase(ipAddress) {
     // fetch data from the API
     const response = await fetch(`https://ipgeolocation.abstractapi.com/v1/?api_key=${process.env.IP_KEY}&ip_address=${ipAddress}`);
     if (response.statusText === 'OK') {
+        const { city, country, latitude, longitude, ip_address, region, security, postal_code, country_code, timezone, flag } = await response.json();
         return {
-            ipData: await response.json(),
+            city, country, latitude, longitude, ip_address, region, security, postal_code, country_code, timezone, flag,
             succeed: true,
         };
     } else {
