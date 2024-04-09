@@ -6,3 +6,9 @@
 
 PHONE_KEY="<specific_phone_key_from_their_api>"
 IP_KEY="<specific_phone_key_from_their_api>"
+
+# Usage:
+```
+export PHONE_KEY="<specific_phone_key_from_their_api>"
+export IP_KEY="<specific_phone_key_from_their_api>"
+```
