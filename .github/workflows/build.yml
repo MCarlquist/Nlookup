@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+  issues:
+     branches:
+       - main
+
 jobs:
   build:
     runs-on: ubuntu-latest
