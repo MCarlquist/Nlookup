@@ -1,0 +1,34 @@
+name: Build Node.js Binary for ARM64
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '16'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Install pkg
+        run: npm install -g pkg
+
+      - name: Build binary
+        run: pkg index.js --targets node16-arm64 --output ./dist/my-app
+
+      - name: Upload binary
+        uses: actions/upload-artifact@v2
+        with:
+          name: my-app-binary
+          path: ./dist/my-app
